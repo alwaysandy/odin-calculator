@@ -55,31 +55,35 @@ body {
 }
 
 .numbers,
-.equals{
+.bottom{
     display: flex;
     width: 300px;
 }
 
 .numbers button,
-.equals button,
+.bottom button,
 .functions button {
     flex: 1 1 auto;
     height: 100px;
 }
 
+button.neg {
+    width: 100px;
+}
+
 button.zero{
-    width: 200px;
+    width: 100px;
 }
 
 button.dot {
     width: 100px;
 }
 
-.equals button.operator {
+.bottom button.operator {
     width: 200px;
 }
 
-.equals button.backspace {
+.bottom button.backspace {
     width: 100px;
 }
 
@@ -112,15 +116,15 @@ button {
     background-color: #729672;
 }
 
-.equals button {
+.bottom button {
     background-color: darksalmon;
 }
 
-.equals button:hover {
+.bottom button:hover {
     background-color: #d1876d;
 }
 
-.equals button:active {
+.bottom button:active {
     background-color: #ba7861;
 }
 

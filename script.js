@@ -47,7 +47,7 @@ function handleOperator(operator) {
             select(operator);
             currentOperation[1] = currentOperator;
         }
-    } else if (currentOperation.length === 2) {
+    } else if (currentOperation.length === 2 && operator !== '=') {
         removeSelected();
         select(operator);
         currentOperation[1] = currentOperator;
@@ -65,19 +65,19 @@ function handleKeyDown(e) {
     }
     switch (e.key) {
         case '+':
-            handleOperator(e.key);
+            handleOperator('+');
             break;
         case '-':
-            handleOperator(e.key);
+            handleOperator('-');
             break;
         case '*':
-            handleOperator(e.key);
+            handleOperator('*');
             break;
         case '/':
-            handleOperator(e.key);
+            handleOperator('/');
             break;
         case '=':
-            handleOperator(e.key);
+            handleOperator('=');
             break;
         case 'Enter':
             handleOperator('=');
@@ -95,7 +95,7 @@ function addOperand(operand) {
     // Only one decimal place allowed per operand
     if (operand === '.') {
         if (currentOperand.find(c => c === '.')) 
-        { 
+        {
             return;
         }
     }
@@ -117,17 +117,46 @@ function addOperand(operand) {
 }
 
 function operate(a, b, operator) {
+    let str;
+    let dotIndex;
+    if (a > 10e11 || b > 10e11) {
+        return "TOO BIG";
+    }
     console.log({a}, {b}, {operator});
     switch (operator) {
         case '+':
-            return a + b;
+            str = String(a + b);
+            return truncateDecimals(str);
         case '-':
-            return a - b;
+            str = String(a - b);
+            return truncateDecimals(str)
         case '*':
-            return a * b;
+            str = String(a * b);
+            return truncateDecimals(str);
         case '/':
-            return a / b;
+            if (b === 0) {
+                return "Nah B";
+            }
+            str = String(a / b);
+            return truncateDecimals(str);
     }
+}
+
+function truncateDecimals(str) {
+    if (str.length > 12) {
+        str = str.split('');
+        dotIndex = str.findIndex((c) => c === '.');
+        if(dotIndex < 12 && dotIndex !== -1) {
+            str.splice(12, str.length);
+        }
+
+        if (str.length > 12){
+            return "TOO BIG!";
+        }
+
+        return parseFloat(str.join(''));
+    }
+    return (parseFloat(str));
 }
 
 function select(symbol) {
@@ -171,6 +200,21 @@ function backspace() {
     }
 }
 
+function toggleNeg() {
+    if (currentOperand.length >= 1)
+    {
+        if (currentOperand[0] === '-') {
+            currentOperand.splice(0, 1);
+        } else {
+            currentOperand.splice(0, 0, '-');
+        }
+        display.textContent = currentOperand.join('');
+    } else if (total) {
+        total = 0 - total;
+        display.textContent = total;
+    }
+}
+
 const currentOperand = [];
 const currentOperation = [];
 let total;
@@ -201,3 +245,6 @@ clear.addEventListener('click', () => {
 
 const back = document.querySelector('.backspace');
 back.addEventListener('click', backspace);
+
+const neg = document.querySelector('.neg');
+neg.addEventListener('click', toggleNeg);
