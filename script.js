@@ -212,7 +212,7 @@ window.addEventListener('keydown', handleKeyDown);
 
 const operands = document.querySelectorAll('.operand');
 const display = document.querySelector('.display');
-for (operand of operands) {
+for (let operand of operands) {
     operand.addEventListener('click', (e) => {
         const operand = e.target.dataset.operand;
         handleOperand(operand);
@@ -220,7 +220,7 @@ for (operand of operands) {
 }
 
 const operators = document.querySelectorAll('.operator');
-for (operator of operators) {
+for (let operator of operators) {
     operator.addEventListener('click', e => {
         const operator = e.target.dataset.operator;
         handleOperator(operator);
