@@ -1,7 +1,7 @@
 function handleOperand(operand) {
     addOperand(operand);
-    display.textContent = currentOperand.join('');
     deselect();
+    display.textContent = currentOperand.join('');
 }
 
 function handleOperator(operator) {
@@ -11,18 +11,20 @@ function handleOperator(operator) {
 
         // Checking for operation.operator because this always calculates via the last operator entered, not the current one
         if (operation.operator) {
-            currentOperand.splice(0, currentOperand.length);
             operation.prev = operate(operation.prev, n, operation.operator);
             display.textContent = operation.prev;
             operation.operator = operator;
             deselect();
             select(operator);
+
+            currentOperand.splice(0, currentOperand.length);
         } else {
             // This is for when there are no numbers entered yet, and an operation has been selected
-            currentOperand.splice(0, currentOperand.length);
             operation.prev = n;
             operation.operator = operator;
             select(operator);
+
+            currentOperand.splice(0, currentOperand.length);
         }
     // If a number has previous been calculated, but one hasn't been entered, this allows the user to swap the current operation
     } else {
@@ -37,8 +39,9 @@ function handleEquals() {
     if (!isNaN(n) && operation.operator) {
         operation.prev = operate(operation.prev, n, operation.operator);
         operation.operator = null;
-        currentOperand.splice(0, currentOperand.length);
         display.textContent = operation.prev;
+
+        currentOperand.splice(0, currentOperand.length);
     }
 }
 
@@ -106,7 +109,7 @@ function operate(a, b, operator) {
     if (a > 10e11 || b > 10e11) {
         return "TOO BIG";
     }
-    
+
     switch (operator) {
         case '+':
             return truncateDecimals(String(a + b));
@@ -126,7 +129,7 @@ function truncateDecimals(str) {
     if (str.length > 12) {
         str = str.split('');
         const dotIndex = str.findIndex((c) => c === '.');
-        if(dotIndex < 12 && dotIndex !== -1) {
+        if (dotIndex < 12 && dotIndex !== -1) {
             str.splice(12, str.length);
         }
 
@@ -141,11 +144,11 @@ function truncateDecimals(str) {
 
 function select(symbol) {
     const operators = document.querySelectorAll('.operator');
-    for (let operator of operators) {
+    operators.forEach((operator) => {
         if (operator.dataset.operator === symbol) {
             operator.classList.add('selected');
         }
-    }
+    });
 }
 
 function deselect() {
@@ -203,20 +206,14 @@ const operation = {
 window.addEventListener('keydown', handleKeyDown);
 
 const operands = document.querySelectorAll('.operand');
-for (let operand of operands) {
-    operand.addEventListener('click', (e) => {
-        const operand = e.target.dataset.operand;
-        handleOperand(operand);
-    });
-}
+operands.forEach((operand) => {
+    operand.addEventListener('click', (e) => handleOperand(e.target.dataset.operand));
+});
 
 const operators = document.querySelectorAll('.operator');
-for (let operator of operators) {
-    operator.addEventListener('click', e => {
-        const operator = e.target.dataset.operator;
-        handleOperator(operator);
-    });
-}
+operators.forEach((operator) => {
+    operator.addEventListener('click', e => handleOperator(e.target.dataset.operator));
+});
 
 const clear = document.querySelector('.clear');
 clear.addEventListener('click', clearCalc);
