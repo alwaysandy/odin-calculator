@@ -8,22 +8,26 @@ function handleOperator(operator) {
     let n = parseFloat(currentOperand.join(''));
     if (!isNaN(n)) {
         // If there is a previous number and an operator, it means this is being calculated after 2 numbers have been entered, and an operator has been clicked again, so it's calculating the operation and showing the completed operation
+
+        // Checking for operation.operator because this always calculates via the last operator entered, not the current one
         if (isFinite(operation.prev) && operation.operator) {
-            operation.prev = operate(operation.prev, n, operation.operator);
-            operation.operator = operator;
-            display.textContent = operation.prev;
             currentOperand.splice(0, currentOperand.length);
+            operation.prev = operate(operation.prev, n, operation.operator);
+            display.textContent = operation.prev;
+            operation.operator = operator;
             deselect();
             select(operator);
         } else {
+            // This is for when there are no numbers entered yet, and an operation has been selected
+            currentOperand.splice(0, currentOperand.length);
             operation.prev = n;
             operation.operator = operator;
-            currentOperand.splice(0, currentOperand.length);
             select(operator);
         }
-    } else if (isFinite(operation.prev)) {
-        deselect();
+    // If a number has previous been calculated, but one hasn't been entered, this allows the user to swap the current operation
+    } else if (operation.prev !== null) {
         operation.operator = operator;
+        deselect();
         select(operator);
     }
 }
@@ -145,8 +149,8 @@ function truncateDecimals(str) {
 
 function select(symbol) {
     const operators = document.querySelectorAll('.operator');
-    for (operator of operators) {
-        if (operator.textContent === symbol) {
+    for (let operator of operators) {
+        if (operator.dataset.operator === symbol) {
             operator.classList.add('selected');
         }
     }
