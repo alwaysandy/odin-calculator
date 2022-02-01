@@ -10,7 +10,7 @@ function handleOperator(operator) {
         // If there is a previous number and an operator, it means this is being calculated after 2 numbers have been entered, and an operator has been clicked again, so it's calculating the operation and showing the completed operation
 
         // Checking for operation.operator because this always calculates via the last operator entered, not the current one
-        if (isFinite(operation.prev) && operation.operator) {
+        if (operation.operator) {
             currentOperand.splice(0, currentOperand.length);
             operation.prev = operate(operation.prev, n, operation.operator);
             display.textContent = operation.prev;
@@ -25,7 +25,7 @@ function handleOperator(operator) {
             select(operator);
         }
     // If a number has previous been calculated, but one hasn't been entered, this allows the user to swap the current operation
-    } else if (operation.prev !== null) {
+    } else {
         operation.operator = operator;
         deselect();
         select(operator);
@@ -81,11 +81,8 @@ function handleKeyDown(e) {
 
 function addOperand(operand) {
     // Only one decimal place allowed per operand
-    if (operand === '.') {
-        if (currentOperand.find(c => c === '.')) 
-        {
-            return;
-        }
+    if (operand === '.' && currentOperand.find(c => c === '.')) {
+        return;
     }
     // Don't allow display to be cluttered with zeroes
     if (operand === '0' && currentOperand.length === 1 && currentOperand[0] === '0') {
@@ -93,6 +90,8 @@ function addOperand(operand) {
     }
     if (operand === '.' && currentOperand.length === 0) {
         currentOperand.push('0');
+        currentOperand.push('.');
+        return;
     }
 
     // If the first number is zero, and it's not going to be followed by a 
@@ -164,7 +163,7 @@ function deselect() {
 }
 
 function clearCalc() {
-    operation.prev = null;
+    operation.prev = 0;
     operation.operator = null;
     currentOperand.splice(0, currentOperand.length);
     display.textContent = '0';
@@ -205,7 +204,7 @@ function toggleNeg() {
 
 const currentOperand = [];
 const operation = {
-    prev: null,
+    prev: 0,
     operator: null,
 }
 
