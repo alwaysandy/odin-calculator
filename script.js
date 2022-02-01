@@ -12,18 +12,16 @@ function handleOperator(operator) {
         // Checking for operation.operator because this always calculates via the last operator entered, not the current one
         if (operation.operator) {
             operation.prev = operate(operation.prev, n, operation.operator);
-            display.textContent = operation.prev;
             operation.operator = operator;
+            display.textContent = operation.prev;
             deselect();
             select(operator);
-
             currentOperand.splice(0, currentOperand.length);
         } else {
             // This is for when there are no numbers entered yet, and an operation has been selected
             operation.prev = n;
             operation.operator = operator;
             select(operator);
-
             currentOperand.splice(0, currentOperand.length);
         }
     // If a number has previous been calculated, but one hasn't been entered, this allows the user to swap the current operation
@@ -40,7 +38,6 @@ function handleEquals() {
         operation.prev = operate(operation.prev, n, operation.operator);
         operation.operator = null;
         display.textContent = operation.prev;
-
         currentOperand.splice(0, currentOperand.length);
     }
 }
@@ -53,6 +50,7 @@ function handleKeyDown(e) {
         const operand = '.';
         handleOperand(operand);
     }
+
     switch (e.key) {
         case '+':
             handleOperator('+');
@@ -107,7 +105,7 @@ function addOperand(operand) {
 
 function operate(a, b, operator) {
     if (a > 10e11 || b > 10e11) {
-        return "TOO BIG";
+        return "TOO BIG!";
     }
 
     switch (operator) {
