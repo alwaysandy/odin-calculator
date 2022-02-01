@@ -79,15 +79,11 @@ button.dot {
     width: 100px;
 }
 
-.bottom button.equals {
+.bottom button.operator {
     width: 200px;
 }
 
 .bottom button.backspace {
-    width: 100px;
-}
-
-.bottom button.clear {
     width: 100px;
 }
 

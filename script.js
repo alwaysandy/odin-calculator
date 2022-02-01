@@ -5,45 +5,62 @@ function handleOperand(operand) {
 }
 
 function handleOperator(operator) {
-    let n = parseFloat(currentOperand.join(''));
-    if (!isNaN(n)) {
-        if ((operation.prev || operation.prev === 0) && operation.operator) {
-            operation.prev = operate(operation.prev, n, operation.operator);
-            operation.operator = operator;
-            display.textContent = operation.prev;
+    let currentOperator = operator;
+    if (currentOperand.length > 0) {
+        if (currentOperation.length == 2) {
+            if (total) {
+                total = operate(
+                                total, 
+                                parseFloat(currentOperand.join('')), 
+                                currentOperation[1]);
+            } else {
+                total = operate(
+                                currentOperation[0], 
+                                parseFloat(currentOperand.join('')), 
+                                currentOperation[1]);
+            }
+            if (currentOperator !== '=')
+            {
+                currentOperation[0] = total;
+                currentOperation[1] = currentOperator;
+                select(operator);
+            } else {
+                currentOperation.splice(0, currentOperation.length);
+                removeSelected();
+            }
+            display.textContent = total;
             currentOperand.splice(0, currentOperand.length);
-            removeSelected();
-            select(operator)
-        } else {
-            operation.prev = n;
-            operation.operator = operator;
+        } else if (currentOperator !== '=') {
+            total = null;
+            currentOperation.push(parseFloat(currentOperand.join('')));
+            currentOperation.push(currentOperator);
             currentOperand.splice(0, currentOperand.length);
-            select(operator)
+            select(operator);
         }
-    } else if ((operation.prev || operation.prev === 0)) {
+    } else if (total) {
+        if (currentOperator !== '=' && currentOperation.length === 0) {
+            currentOperation.push(total);
+            currentOperation.push(currentOperator);
+            select(operator);
+        } else if (currentOperator !== '=' && currentOperation.length === 2) {
+            removeSelected();
+            select(operator);
+            currentOperation[1] = currentOperator;
+        }
+    } else if (currentOperation.length === 2 && operator !== '=') {
         removeSelected();
-        operation.operator = operator;
-        select(operator)
-    }
-}
-
-function handleEquals() {
-    let n = parseFloat(currentOperand.join(''));
-    if (!isNaN(n) && operation.operator) {
-        operation.prev = operate(operation.prev, n, operation.operator);
-        display.textContent = operation.prev;
-        operation.operator = null;
-        currentOperand.splice(0, currentOperand.length);
+        select(operator);
+        currentOperation[1] = currentOperator;
     }
 }
 
 function handleKeyDown(e) {
     console.log(e.key);
     if (e.code.indexOf('Digit') === 0 && e.key !== '*') {
-        const [trash, operand] = e.code.split('Digit');
+        [trash, operand] = e.code.split('Digit');
         handleOperand(operand);
     } else if (e.code === 'Period'){ 
-        const operand = '.';
+        operand = '.';
         handleOperand(operand);
     }
     switch (e.key) {
@@ -60,10 +77,10 @@ function handleKeyDown(e) {
             handleOperator('/');
             break;
         case '=':
-            handleEquals();
+            handleOperator('=');
             break;
         case 'Enter':
-            handleEquals();
+            handleOperator('=');
             break;
         case 'c':
             clearCalc();
@@ -159,8 +176,8 @@ function removeSelected() {
 }
 
 function clearCalc() {
-    operation.prev = null;
-    operation.operator = null;
+    total = null;
+    currentOperation.splice(0, currentOperation.length);
     currentOperand.splice(0, currentOperand.length);
     display.textContent = '0';
     removeSelected();
@@ -192,17 +209,15 @@ function toggleNeg() {
             currentOperand.splice(0, 0, '-');
         }
         display.textContent = currentOperand.join('');
-    } else if (operation.prev) {
-        operation.prev = 0 - operation.prev;
-        display.textContent = operation.prev;
+    } else if (total) {
+        total = 0 - total;
+        display.textContent = total;
     }
 }
 
 const currentOperand = [];
-const operation = {
-    prev: null,
-    operator: null,
-}
+const currentOperation = [];
+let total;
 
 const operands = document.querySelectorAll('.operand');
 const display = document.querySelector('.display');
@@ -233,6 +248,3 @@ back.addEventListener('click', backspace);
 
 const neg = document.querySelector('.neg');
 neg.addEventListener('click', toggleNeg);
-
-const equals = document.querySelector('.equals');
-equals.addEventListener('click', handleEquals);
