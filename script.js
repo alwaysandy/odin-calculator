@@ -7,7 +7,7 @@ function handleOperand(operand) {
 function handleOperator(operator) {
     let n = parseFloat(currentOperand.join(''));
     if (!isNaN(n)) {
-        if ((operation.prev || operation.prev === 0) && operation.operator) {
+        if (isFinite(operation.prev) && operation.operator) {
             operation.prev = operate(operation.prev, n, operation.operator);
             operation.operator = operator;
             display.textContent = operation.prev;
@@ -20,7 +20,7 @@ function handleOperator(operator) {
             currentOperand.splice(0, currentOperand.length);
             select(operator)
         }
-    } else if ((operation.prev || operation.prev === 0)) {
+    } else if (isFinite(operation.prev)) {
         removeSelected();
         operation.operator = operator;
         select(operator)
@@ -31,9 +31,9 @@ function handleEquals() {
     let n = parseFloat(currentOperand.join(''));
     if (!isNaN(n) && operation.operator) {
         operation.prev = operate(operation.prev, n, operation.operator);
-        display.textContent = operation.prev;
         operation.operator = null;
         currentOperand.splice(0, currentOperand.length);
+        display.textContent = operation.prev;
     }
 }
 
