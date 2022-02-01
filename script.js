@@ -208,6 +208,8 @@ const operation = {
     operator: null,
 }
 
+window.addEventListener('keydown', handleKeyDown);
+
 const operands = document.querySelectorAll('.operand');
 const display = document.querySelector('.display');
 for (operand of operands) {
@@ -216,8 +218,6 @@ for (operand of operands) {
         handleOperand(operand);
     });
 }
-
-window.addEventListener('keydown', handleKeyDown);
 
 const operators = document.querySelectorAll('.operator');
 for (operator of operators) {
@@ -228,9 +228,7 @@ for (operator of operators) {
 }
 
 const clear = document.querySelector('.clear');
-clear.addEventListener('click', () => {
-    clearCalc();
-});
+clear.addEventListener('click', clearCalc);
 
 const back = document.querySelector('.backspace');
 back.addEventListener('click', backspace);
