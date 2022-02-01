@@ -1,29 +1,30 @@
 function handleOperand(operand) {
     addOperand(operand);
     display.textContent = currentOperand.join('');
-    removeSelected();
+    deselect();
 }
 
 function handleOperator(operator) {
     let n = parseFloat(currentOperand.join(''));
     if (!isNaN(n)) {
+        // If there is a previous number and an operator, it means this is being calculated after 2 numbers have been entered, and an operator has been clicked again, so it's calculating the operation and showing the completed operation
         if (isFinite(operation.prev) && operation.operator) {
             operation.prev = operate(operation.prev, n, operation.operator);
             operation.operator = operator;
             display.textContent = operation.prev;
             currentOperand.splice(0, currentOperand.length);
-            removeSelected();
-            select(operator)
+            deselect();
+            select(operator);
         } else {
             operation.prev = n;
             operation.operator = operator;
             currentOperand.splice(0, currentOperand.length);
-            select(operator)
+            select(operator);
         }
     } else if (isFinite(operation.prev)) {
-        removeSelected();
+        deselect();
         operation.operator = operator;
-        select(operator)
+        select(operator);
     }
 }
 
@@ -151,7 +152,7 @@ function select(symbol) {
     }
 }
 
-function removeSelected() {
+function deselect() {
     const selected = document.querySelector('.selected');
     if (selected) {
         selected.classList.remove('selected');
@@ -163,7 +164,7 @@ function clearCalc() {
     operation.operator = null;
     currentOperand.splice(0, currentOperand.length);
     display.textContent = '0';
-    removeSelected();
+    deselect();
 }
 
 function backspace() {
