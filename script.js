@@ -43,11 +43,10 @@ function handleEquals() {
 }
 
 function handleKeyDown(e) {
-    console.log(e.key);
     if (e.code.indexOf('Digit') === 0 && e.key !== '*') {
         const [trash, operand] = e.code.split('Digit');
         handleOperand(operand);
-    } else if (e.code === 'Period'){ 
+    } else if (e.code === 'Period') { 
         const operand = '.';
         handleOperand(operand);
     }
@@ -96,7 +95,7 @@ function addOperand(operand) {
 
     // If the first number is zero, and it's not going to be followed by a 
     // decimal, set the first number to whatever is chosen that's not zero
-    if (currentOperand.length === 1 && currentOperand[0] === '0' && operand !== '.'){
+    if (currentOperand.length === 1 && currentOperand[0] === '0' && operand !== '.') {
         currentOperand[0] = operand;
     } else {
         currentOperand.push(operand);
@@ -104,35 +103,29 @@ function addOperand(operand) {
 }
 
 function operate(a, b, operator) {
-    let str;
-    let dotIndex;
     if (a > 10e11 || b > 10e11) {
         return "TOO BIG";
     }
-    console.log({a}, {b}, {operator});
+    
     switch (operator) {
         case '+':
-            str = String(a + b);
-            return truncateDecimals(str);
+            return truncateDecimals(String(a + b));
         case '-':
-            str = String(a - b);
-            return truncateDecimals(str)
+            return truncateDecimals(String(a - b))
         case '*':
-            str = String(a * b);
-            return truncateDecimals(str);
+            return truncateDecimals(String(a * b));
         case '/':
             if (b === 0) {
                 return "Nah B";
             }
-            str = String(a / b);
-            return truncateDecimals(str);
+            return truncateDecimals(String(a / b));
     }
 }
 
 function truncateDecimals(str) {
     if (str.length > 12) {
         str = str.split('');
-        dotIndex = str.findIndex((c) => c === '.');
+        const dotIndex = str.findIndex((c) => c === '.');
         if(dotIndex < 12 && dotIndex !== -1) {
             str.splice(12, str.length);
         }
@@ -179,8 +172,7 @@ function backspace() {
         }
     }
 
-    if (display.textContent.length === 0 || currentOperand.length === 0)
-    {
+    if (display.textContent.length === 0 || currentOperand.length === 0) {
         display.textContent = '0';
     } else {
         display.textContent = currentOperand.join('');
@@ -188,8 +180,7 @@ function backspace() {
 }
 
 function toggleNeg() {
-    if (currentOperand.length >= 1)
-    {
+    if (currentOperand.length >= 1) {
         if (currentOperand[0] === '-') {
             currentOperand.splice(0, 1);
         } else {
@@ -202,6 +193,7 @@ function toggleNeg() {
     }
 }
 
+const display = document.querySelector('.display');
 const currentOperand = [];
 const operation = {
     prev: 0,
@@ -211,7 +203,6 @@ const operation = {
 window.addEventListener('keydown', handleKeyDown);
 
 const operands = document.querySelectorAll('.operand');
-const display = document.querySelector('.display');
 for (let operand of operands) {
     operand.addEventListener('click', (e) => {
         const operand = e.target.dataset.operand;
@@ -233,8 +224,8 @@ clear.addEventListener('click', clearCalc);
 const back = document.querySelector('.backspace');
 back.addEventListener('click', backspace);
 
-const neg = document.querySelector('.neg');
-neg.addEventListener('click', toggleNeg);
+const negToggle = document.querySelector('.neg');
+negToggle.addEventListener('click', toggleNeg);
 
 const equals = document.querySelector('.equals');
 equals.addEventListener('click', handleEquals);
