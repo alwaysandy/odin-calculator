@@ -36,12 +36,13 @@ function handleOperator(operator) {
 
 function handleEquals() {
     let n = parseFloat(currentOperand.join(''));
-    if ((!isNaN(n) && operation.operator)) {
+    if (!isNaN(n) && operation.operator) {
         operation.prev = operate(operation.prev, n, operation.operator);
-        display.textContent = operation.prev;
         operation.operator = null;
+        display.textContent = operation.prev;
         currentOperand.splice(0, currentOperand.length);
     }
+
     deselect();
 }
 
@@ -194,7 +195,6 @@ const currentOperand = [];
 const operation = {
     prev: 0,
     operator: null,
-    operated: false,
 }
 
 window.addEventListener('keydown', handleKeyDown);
