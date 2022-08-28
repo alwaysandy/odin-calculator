@@ -1,6 +1,7 @@
-body {
+* {
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
 }
 
 .alignment-container {
@@ -24,7 +25,7 @@ body {
 .display-container {
     flex: 1 1 auto;
     height: 100px;
-    width:398px;
+    width:400px;
     background-color: moccasin;
     border: 1px solid black;
     display: flex;
@@ -65,6 +66,7 @@ body {
 .functions button {
     flex: 1 1 auto;
     height: 100px;
+    width: 100px;
 }
 
 button.neg {
